@@ -1,0 +1,20 @@
+# Maven
+demo/target/
+demo/.mvn/
+demo/mvnw
+demo/mvnw.cmd
+
+# IDE
+demo/.idea/
+demo/.vscode/
+demo/*.iml
+demo/.settings/
+demo/.project
+demo/.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+demo/*.log

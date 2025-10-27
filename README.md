@@ -1,4 +1,4 @@
-# Docker-running
+# Docker-running & Triển khai Ứng dụng Web + MySQL
 Tạo Image cho ứng dụng web SpringBoot
 
 Lưu dữ liệu vào MySQL (container) có mount dữ liệu (bind mount or volume mount)
@@ -50,4 +50,50 @@ Thư mục "db_data":
 Kết quả sau khi tắt/mở lại docker:
 
 <img width="1481" height="708" alt="image" src="https://github.com/user-attachments/assets/76238b88-bb5c-49dc-895d-0edf243d4e91" />
+
+## Triển khai ứng dụng Web và MySQL
+
+Sử dụng Dockerfile để build "docker build -t webapp-k8s:latest ."
+
+<img width="1400" height="579" alt="image" src="https://github.com/user-attachments/assets/dd900f0e-e324-42c2-af60-76d66eb0b7ad" />
+
+Kiểm tra xem đã build thành công chưa:
+
+<img width="646" height="155" alt="image" src="https://github.com/user-attachments/assets/30379896-e1b0-4ef0-be56-8c4c9a4b8ea9" />
+
+Tạo folder "k8s-docker-test" gồm 4 file ".yaml" nội dung như trong repo, và apply 4 file trên "kubectl apply -f ."
+
+Chạy "kubectl get pods -l app=webapp" để theo dõi xem app đã chạy chưa:
+
+<img width="680" height="67" alt="image" src="https://github.com/user-attachments/assets/98533df8-f4d3-402b-8c76-e9d537d64f27" />
+
+Kiểm tra cho Status là "Running". Để kiểm tra, truy cập vào "http://localhost"
+
+<img width="1919" height="975" alt="image" src="https://github.com/user-attachments/assets/975f319b-9446-4995-8348-29a64aff74ad" />
+
+Thêm thử 2 tên User vào
+
+<img width="1919" height="975" alt="image" src="https://github.com/user-attachments/assets/0ff17b9c-255b-44e8-8ff9-0ac0a88592f1" />
+
+### Test tính toàn vẹn của data 
+
+Xóa pod MySQL:
+
+<img width="860" height="228" alt="image" src="https://github.com/user-attachments/assets/fc7b4cc8-18db-4246-8626-4fccba2ed131" />
+
+Sau đó chạy lại "kubectl get pods", xuất hiện pod mysql mới và dữ liệu trên "http://localhost" vẫn còn nguyên.
+
+<img width="1919" height="976" alt="image" src="https://github.com/user-attachments/assets/5524e94a-66a6-460d-9fa7-5a9d802a9262" />
+
+### Test với terminal và MySQL Workbench
+
+<img width="835" height="215" alt="image" src="https://github.com/user-attachments/assets/94d8b16e-46e5-41ab-bb88-6068ec6699c4" />
+
+Tạo 1 connection mới trong MySQL Workbench như hình:
+
+<img width="878" height="590" alt="image" src="https://github.com/user-attachments/assets/2b93516f-4276-4a47-b4a5-5091a985c95e" />
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/04d96619-6172-4813-9fe1-4516252c1107" />
+
+Như hình trên => dữ liệu được lưu => thành công triển khai MySQL trên K8S.
 

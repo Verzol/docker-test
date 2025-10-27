@@ -1,57 +1,39 @@
 package com.example.demo;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
-
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/users")
+@Controller
 public class UserController {
 
-    private final UserRepo repo;
+    @Autowired
+    private UserRepo userRepo;
 
-    // Lấy danh sách tất cả users
-    @GetMapping
-    public List<User> getAllUsers() {
-        return repo.findAll();
+    @GetMapping("/")
+    public String getAllUsers(Model model) {
+        model.addAttribute("users", userRepo.findAll());
+        
+        model.addAttribute("newUser", new User());
+        
+        return "index"; 
     }
 
-    // Tạo user mới
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return repo.save(user);
+    @PostMapping("/add")
+    public String createUser(@ModelAttribute User newUser) {
+        userRepo.save(newUser); 
+        
+        return "redirect:/";
     }
 
-    // Lấy user theo id
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    // Cập nhật user
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User newUser) {
-        return repo.findById(id)
-                .map(user -> {
-                    user.setName(newUser.getName());
-                    return repo.save(user);
-                })
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    // Xóa user
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        repo.deleteById(id);
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        userRepo.deleteById(id);
+        
+        return "redirect:/";
     }
 }
